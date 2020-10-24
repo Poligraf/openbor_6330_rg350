@@ -23,6 +23,31 @@ endif
 #----------------------------------------------------------------------------------------------------
 
 
+ifdef BUILD_OPENDINGUX
+TARGET 	        = $(VERSION_NAME).elf
+TARGET_FINAL    = $(VERSION_NAME)
+TARGET_PLATFORM = OPENDINGUX
+BUILD_SDL       = 1
+BUILD_GFX       = 1
+BUILD_PTHREAD   = 1
+BUILD_SDL_IO    = 1
+BUILD_VORBIS    = 1
+# BUILD_WEBM      = 1 #added
+BUILDING        = 1
+
+CC              = $(OPENDINGUX_TOOLCHAIN)/bin/mipsel-linux-gcc
+INCLUDES        = $(OPENDINGUX_TOOLCHAIN_PREFIX)/include \
+                  $(OPENDINGUX_TOOLCHAIN_PREFIX)/include/SDL2 
+LIBRARIES       = $(OPENDINGUX_TOOLCHAIN_PREFIX)/lib 
+
+# BUILD_DEBUG = 1
+ifeq ($(BUILD_OPENDINGUX), 0)
+BUILD_DEBUG     = 1
+endif
+endif
+
+
+
 ifdef BUILD_PSP
 TARGET          = $(VERSION_NAME)
 TARGET_FINAL    = EBOOT.PBP
@@ -201,6 +226,10 @@ endif
 ifdef BUILD_PANDORA
 STRIP 	        = $(PNDDEV)/bin/arm-none-linux-gnueabi-strip $(TARGET) -o $(TARGET_FINAL)
 endif
+ifdef BUILD_OPENDINGUX
+# STRIP           = $(OPENDINGUX_TOOLCHAIN_PREFIX)/bin/mipsel-linux-strip $(TARGET) -o $(TARGET_FINAL)
+STRIP           = mipsel-linux-strip $(TARGET) -o $(TARGET_FINAL)
+endif
 ifdef BUILD_WII
 STRIP           = elf2dol $< $@
 endif
@@ -234,6 +263,10 @@ endif
 
 ifdef BUILD_LINUX
 INCS           += 'libpng-config --prefix'/include/libpng
+endif
+
+ifdef BUILD_OPENDINGUX
+INCS           += '$(OPENDINGUX_TOOLCHAIN_PREFIX)/bin/libpng-config --prefix'/include/libpng
 endif
 
 
@@ -491,6 +524,16 @@ ifdef BUILD_ELM
 CFLAGS         += -DUSE_LIBELM
 endif
 endif
+
+
+ifdef BUILD_OPENDINGUX
+ifeq ($(BUILD_GCW0), 1)
+CFLAGS += -O3 -fomit-frame-pointer -ffast-math -funroll-loops -Wall -Wno-unknown-pragmas -Wno-format -DPLATFORM_DINGOO 
+else
+CFLAGS += -O3 -fomit-frame-pointer -ffast-math -funroll-loops -Wall -Wno-unknown-pragmas -Wno-format -DPLATFORM_DINGOO
+endif
+endif
+
 
 
 ifdef BUILD_VITA
