@@ -36681,9 +36681,9 @@ readfile:
         buf = NULL;
     }
 
-#if OPENDINGUX || GP2X
-    videoMode = 0;
-#endif
+// #if OPENDINGUX || GP2X
+//     videoMode = 0;
+// #endif
 
 #if SYMBIAN
     if(videoMode != 0 && videoMode != 2)
