@@ -1,0 +1,9 @@
+#!/bin/sh
+mkdir -p "/media/data/local/home/games/openbor/Logs";
+mkdir -p "/media/data/local/home/games/openbor/Saves";
+mkdir -p "/media/data/local/home/games/openbor/ScreenShots";
+mkdir -p "/media/data/local/home/games/openbor/Paks/";
+touch "/media/data/local/home/games/openbor/Logs/OpenBorLog.txt";
+dir=$(dirname $0)
+
+LD_LIBRARY_PATH=$dir/libs ./OpenBOR.dge;

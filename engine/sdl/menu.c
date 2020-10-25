@@ -174,7 +174,11 @@ static int findPaks(void)
 	int i = 0;
 	DIR* dp = NULL;
 	struct dirent* ds;
+	#ifdef OPENDINGUX
+	dp = opendir("/media/data/local/home/games/openbor/Paks");
+	#else
 	dp = opendir(paksDir);
+	#endif
 	if(dp != NULL)
    	{
 		while((ds = readdir(dp)) != NULL)
@@ -509,7 +513,11 @@ static void drawMenu()
 	s_screen* Image = NULL;
 
 	putscreen(vscreen,bgscreen,0,0,NULL);
+	#ifdef OPENDINGUX
+	if(dListTotal < 1) printText((isWide ? 30 : 8), (isWide ? 33 : 24), RED, 0, 0, "No Mods In /media/data/local/home/games/openbor/Paks");
+	#else
 	if(dListTotal < 1) printText((isWide ? 30 : 8), (isWide ? 33 : 24), RED, 0, 0, "No Mods In Paks Folder!");
+	#endif
 	for(list = 0; list < dListTotal; list++)
 	{
 		if(list < MAX_MODS_NUM)
@@ -789,4 +797,3 @@ void Menu()
 	// Restore pixelformat default value.
 	pixelformat = PIXEL_x8;
 }
-

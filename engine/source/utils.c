@@ -84,6 +84,19 @@ typedef void DIR;
 #define READ_LOGFILE(type)   type ? fopen("ux0:/data/OpenBOR/Logs/OpenBorLog.txt", "rt") : fopen("ux0:/data/OpenBOR/Logs/ScriptLog.txt", "rt")
 #define COPY_ROOT_PATH(buf, name) strcpy(buf, "ux0:/data/OpenBOR/"); strcat(buf, name); strcat(buf, "/");
 #define COPY_PAKS_PATH(buf, name) strcpy(buf, "ux0:/data/OpenBOR/Paks/"); strcat(buf, name);
+
+#elif OPENDINGUX
+#define CHECK_LOGFILE(type)  type ? fileExists("/media/data/local/home/games/openbor/Logs/OpenBorLog.txt") : fileExists("/usr/local/home/.OpenBOR/Logs/ScriptLog.txt")
+#define OPEN_LOGFILE(type)   type ? fopen("/media/data/local/home/games/openbor/Logs/OpenBorLog.txt", "wt") : fopen("/usr/local/home/.OpenBOR/Logs/ScriptLog.txt", "wt")
+#define APPEND_LOGFILE(type) type ? fopen("/media/data/local/home/games/openbor/Logs/OpenBorLog.txt", "at") : fopen("/usr/local/home/.OpenBOR/Logs/ScriptLog.txt", "at")
+#define READ_LOGFILE(type)   type ? fopen("/media/data/local/home/games/openbor/Logs/OpenBorLog.txt", "rt") : fopen("/usr/local/home/.OpenBOR/Logs/ScriptLog.txt", "rt")
+#define COPY_ROOT_PATH(buf, name) strncpy(buf, "/media/data/local/home/games/openbor/", 37); strncat(buf, name, strlen(name)); strncat(buf, "/", 1);
+#define COPY_PAKS_PATH(buf, name) strncpy(buf, "/media/data/local/home/games/openbor/Paks/", 42); strncat(buf, name, strlen(name));
+
+
+
+
+
 #elif ANDROID
 //msmalik681 now using AndroidRoot fuction from sdlport.c to update all android paths.
 #define Alog AndroidRoot("Logs/OpenBorLog.txt")
@@ -693,4 +706,3 @@ void Array_Check_Size( const char *f_caller, char **array, int new_size, int *cu
     // ReAssign the new allocated array
     *array = copy;
 }
-

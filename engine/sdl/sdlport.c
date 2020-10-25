@@ -23,14 +23,39 @@
 #endif
 
 char packfile[MAX_FILENAME_LEN] = {"bor.pak"};
-#if ANDROID
-#include <unistd.h>
-char rootDir[MAX_BUFFER_LEN] = {""};
-#endif
+
+#ifdef OPENDINGUX
+char paksDir[MAX_FILENAME_LEN] = {"/media/data/local/home/games/openbor/Paks"};
+char savesDir[MAX_FILENAME_LEN] = {"/media/data/local/home/games/openbor/Saves"};
+char logsDir[MAX_FILENAME_LEN] = {"/media/data/local/home/games/openbor/Logs"};
+char screenShotsDir[MAX_FILENAME_LEN] = {"/media/data/local/home/games/openbor/ScreenShots"};
+
+
+#else
+
 char paksDir[MAX_FILENAME_LEN] = {"Paks"};
 char savesDir[MAX_FILENAME_LEN] = {"Saves"};
 char logsDir[MAX_FILENAME_LEN] = {"Logs"};
 char screenShotsDir[MAX_FILENAME_LEN] = {"ScreenShots"};
+#endif
+
+
+
+
+
+// char paksDir[MAX_FILENAME_LEN] = {"Paks"};
+// char savesDir[MAX_FILENAME_LEN] = {"Saves"};
+// char logsDir[MAX_FILENAME_LEN] = {"Logs"};
+// char screenShotsDir[MAX_FILENAME_LEN] = {"ScreenShots"};
+// #endif
+
+
+
+#if ANDROID
+#include <unistd.h>
+char rootDir[MAX_BUFFER_LEN] = {""};
+#endif
+
 
 // sleeps for the given number of microseconds
 #if _POSIX_C_SOURCE >= 199309L
@@ -106,6 +131,11 @@ int main(int argc, char *argv[])
 
 	packfile_mode(0);
 
+
+
+
+
+
 #ifdef ANDROID
     if(strstr(SDL_AndroidGetExternalStoragePath(), "org.openbor.engine"))
     {
@@ -146,4 +176,3 @@ int main(int argc, char *argv[])
 	borExit(0);
 	return 0;
 }
-

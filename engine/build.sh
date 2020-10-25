@@ -289,7 +289,7 @@ function opendingux {
   . ./environ.sh 8
   if test $OPENDINGUX_TOOLCHAIN; then
     make clean BUILD_OPENDINGUX=1
-    make BUILD_OPENDINGUX=1
+    make -j16 BUILD_OPENDINGUX=1
     if test $BUILD_GCW0; then
 		if test -f "OpenBOR"; then
 		  if test ! -e "./releases/OPENDINGUX" ; then
@@ -298,12 +298,12 @@ function opendingux {
 		  fi
 		  rm ./releases/OPENDINGUX/OpenBOR.opk
 		  mv OpenBOR ./releases/OPENDINGUX/OpenBOR/OpenBOR.dge
-		  cp ./retrofw/default.retrofw.desktop ./releases/OPENDINGUX/OpenBOR/
-		  cp ./retrofw/openbor.png ./releases/OPENDINGUX/OpenBOR/
-		  cp ./retrofw/ob.sh ./releases/OPENDINGUX/OpenBOR/
-		  cp ./retrofw/readme.retrofw.txt ./releases/OPENDINGUX/OpenBOR/
+		  cp ./gcw0/default.gcw0.desktop ./releases/OPENDINGUX/OpenBOR/
+		  cp ./gcw0/openbor.png ./releases/OPENDINGUX/OpenBOR/
+		  cp ./gcw0/ob.sh ./releases/OPENDINGUX/OpenBOR/
+		  cp ./gcw0/readme.gcw0.txt ./releases/OPENDINGUX/OpenBOR/
 		  mksquashfs ./releases/OPENDINGUX/OpenBOR/ ./releases/OPENDINGUX/OpenBOR.opk -all-root -noappend -no-exports -no-xattrs
-		fi    
+		fi
     else
 		if test -f "OpenBOR.dge"; then
 		  if test ! -e "./releases/OPENDINGUX" ; then
@@ -489,4 +489,3 @@ case $1 in
     print_help
     ;;
 esac
-

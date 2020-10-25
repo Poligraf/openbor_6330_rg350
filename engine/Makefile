@@ -31,7 +31,10 @@ BUILD_SDL       = 1
 BUILD_GFX       = 1
 BUILD_PTHREAD   = 1
 BUILD_SDL_IO    = 1
+BUILD_OPENGL    = 1
+BUILD_LOADGL    = 1
 BUILD_VORBIS    = 1
+#BUILD_WEBM      = 1
 # BUILD_WEBM      = 1 #added
 BUILDING        = 1
 
@@ -611,7 +614,7 @@ ifdef BUILD_SDL
 ifeq ($(findstring DGE, $(SDKPATH)), DGE)
 LIBS           += -lSDL -lSDL_gfx -lts
 else
-LIBS           += -Wl,-rpath,$(LIBRARIES) -lSDL2 'libSDL2_gfx.a'
+LIBS           += -Wl,-rpath,$(LIBRARIES) -lSDL2 libSDL2_gfx.a
 endif
 endif
 
