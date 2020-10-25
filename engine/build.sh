@@ -3,7 +3,7 @@
 # -----------------------------------------------------------------------
 # All rights reserved, see LICENSE in OpenBOR root for details.
 #
-# Copyright (c) 2004 - 2018 OpenBOR Team
+# Copyright (c) 2004 - 2014 OpenBOR Team
 #
 
 #!/bin/bash
@@ -13,14 +13,10 @@
 # Used for resetting path prior to each platform.
 export OLD_PATH=$PATH
 
-# Use parellel make to speed up compilation
-export MAKEFLAGS=-j4
-
 # Display Version
 function version {
   . ./version.sh
   make version
-  mkdir -p releases
   cp README ./releases/README.txt
   cp LICENSE ./releases/LICENSE.txt
   cp COMPILING ./releases/COMPILING.txt
@@ -43,8 +39,19 @@ function distribute {
     echo "PSP Platform Failed To Build!"
     exit 1
   fi
-
-if test -e "releases/WINDOWS/OpenBOR/OpenBOR.exe"; then
+  if ! test -e "releases/GP2X/OpenBOR/OpenBOR.gpe"; then
+    echo "GP2X Platform Failed To Build!"
+    exit 1
+  fi
+  if ! test -e "releases/WIZ/OpenBOR/OpenBOR.gpe"; then
+    echo "WIZ Platform Failed To Build!"
+    exit 1
+  fi
+  if ! test -e "releases/DC/OpenBOR/1ST_READ.BIN"; then
+    echo "Dreamcast Platform Failed To Build!"
+    exit 1
+  fi
+  if test -e "releases/WINDOWS/OpenBOR/OpenBOR.exe"; then
     cd ../tools/borpak/source/
     . build.sh win
     cp borpak.exe ../../../engine/releases/WINDOWS/OpenBOR/
@@ -130,20 +137,26 @@ function psp {
   fi
 }
 
-# PS Vita Environment && Compile
-function vita {
+# Gp2x Environment && Compile
+function gp2x {
   export PATH=$OLD_PATH
-  . ./environ.sh 2
-  if test $VITASDK; then
-    make clean BUILD_VITA=1
-    make BUILD_VITA=1
-    if test -f "./OpenBOR.vpk"; then
-      if test ! -e "./releases/VITA"; then
-        mkdir ./releases/VITA
+  . ./environ.sh 3
+  if test $GP2XDEV; then
+    make clean BUILD_GP2X=1
+    make BUILD_GP2X=1
+    if test -f "./OpenBOR.gpe"; then
+      if test ! -e "./releases/GP2X"; then
+        mkdir ./releases/GP2X
+        mkdir ./releases/GP2X/OpenBOR
+        mkdir ./releases/GP2X/OpenBOR/Logs
+        mkdir ./releases/GP2X/OpenBOR/Paks
+        mkdir ./releases/GP2X/OpenBOR/Saves
+        mkdir ./releases/GP2X/OpenBOR/ScreenShots
       fi
-      mv OpenBOR.vpk ./releases/VITA/
+      cp ./sdl/gp2x/modules/mmuhack.o ./releases/GP2X/OpenBOR/
+      mv OpenBOR.gpe ./releases/GP2X/OpenBOR/
     fi
-    make clean BUILD_VITA=1
+    make clean BUILD_GP2X=1
   fi
 }
 
@@ -228,6 +241,24 @@ function windows {
   fi
 }
 
+# Dreamcast Environment && Compile
+function dreamcast {
+  export PATH=$OLD_PATH
+  . ./environ.sh 6
+  if test $KOS_BASE; then
+    make clean BUILD_DC=1
+    make BUILD_DC=1
+    if test -f "./1ST_READ.BIN"; then
+      if test ! -e "./releases/DC" ; then
+        mkdir ./releases/DC
+        mkdir ./releases/DC/OpenBOR
+      fi
+      mv 1ST_READ.BIN ./releases/DC/OpenBOR/
+    fi
+    make clean BUILD_DC=1
+  fi
+}
+
 # Wii Environment && Compile
 function wii {
   export PATH=$OLD_PATH
@@ -249,6 +280,74 @@ function wii {
       cp ./resources/OpenBOR_Icon_128x48.png ./releases/WII/OpenBOR/icon.png
     fi
     make clean BUILD_WII=1
+  fi
+}
+
+# OpenDingux Environment && Compile
+function opendingux {
+  export PATH=$OLD_PATH
+  . ./environ.sh 8
+  if test $OPENDINGUX_TOOLCHAIN; then
+    make clean BUILD_OPENDINGUX=1
+    make BUILD_OPENDINGUX=1
+    if test $BUILD_GCW0; then
+		if test -f "OpenBOR"; then
+		  if test ! -e "./releases/OPENDINGUX" ; then
+			mkdir ./releases/OPENDINGUX
+			mkdir ./releases/OPENDINGUX/OpenBOR
+		  fi
+		  rm ./releases/OPENDINGUX/OpenBOR.opk
+		  mv OpenBOR ./releases/OPENDINGUX/OpenBOR/OpenBOR.dge
+		  cp ./retrofw/default.retrofw.desktop ./releases/OPENDINGUX/OpenBOR/
+		  cp ./retrofw/openbor.png ./releases/OPENDINGUX/OpenBOR/
+		  cp ./retrofw/ob.sh ./releases/OPENDINGUX/OpenBOR/
+		  cp ./retrofw/readme.retrofw.txt ./releases/OPENDINGUX/OpenBOR/
+		  mksquashfs ./releases/OPENDINGUX/OpenBOR/ ./releases/OPENDINGUX/OpenBOR.opk -all-root -noappend -no-exports -no-xattrs
+		fi    
+    else
+		if test -f "OpenBOR.dge"; then
+		  if test ! -e "./releases/OPENDINGUX" ; then
+			mkdir ./releases/OPENDINGUX
+			mkdir ./releases/OPENDINGUX/OpenBOR
+			mkdir ./releases/OPENDINGUX/OpenBOR/Logs
+			mkdir ./releases/OPENDINGUX/OpenBOR/Paks
+			mkdir ./releases/OPENDINGUX/OpenBOR/Saves
+			mkdir ./releases/OPENDINGUX/OpenBOR/ScreenShots
+		  fi
+		  mv OpenBOR.dge ./releases/OPENDINGUX/OpenBOR/
+		fi
+    fi
+    make clean BUILD_OPENDINGUX=1
+  fi
+}
+
+# WIZ Environment && Compile
+function wiz {
+  export PATH=$OLD_PATH
+  . ./environ.sh 9
+  if test $WIZDEV; then
+    make clean BUILD_WIZ=1
+    make BUILD_WIZ=1
+    if test -f "./OpenBOR.gpe"; then
+      if test ! -e "./releases/WIZ"; then
+        mkdir ./releases/WIZ
+        mkdir ./releases/WIZ/OpenBOR
+        mkdir ./releases/WIZ/OpenBOR/Logs
+        mkdir ./releases/WIZ/OpenBOR/Paks
+        mkdir ./releases/WIZ/OpenBOR/Saves
+        mkdir ./releases/WIZ/OpenBOR/ScreenShots
+      fi
+      mv OpenBOR.gpe ./releases/WIZ/OpenBOR/
+      if [ `echo $HOST_PLATFORM | grep -o "SVN"` ]; then
+        cp $SDKPATH/lib/target/libSDL-1.2.so.0.11.2 ./releases/WIZ/OpenBOR/
+        cp $SDKPATH/lib/target/libSDL_gfx.so.0.0.17 ./releases/WIZ/OpenBOR/libSDL_gfx.so.0
+      else
+        cp $SDKPATH/lib/warm_2.6.24.ko ./releases/WIZ/OpenBOR/
+        cp $SDKPATH/lib/libSDL-1.2.so.0.11.2 ./releases/WIZ/OpenBOR/
+        cp $SDKPATH/lib/libSDL_gfx.so.0.0.17 ./releases/WIZ/OpenBOR/libSDL_gfx.so.0
+      fi
+    fi
+    make clean BUILD_WIZ=1
   fi
 }
 
@@ -280,20 +379,6 @@ function darwin {
   fi
 }
 
-# Android Compile
-function android {
-  export PATH=$OLD_PATH
-    if test -f "./android/bin/OpenBOR-debug.apk"; then
-      if test ! -e "./releases/Android/"; then
-		rm -rf ./releases/ANDROID
-        mkdir ./releases/ANDROID
-      fi
-      cp ./android/bin/OpenBOR-debug.apk ./releases/ANDROID
-		echo "Android Build Copied!"
-    fi
-}
-
-
 function build_all {
   clean
   version
@@ -301,13 +386,15 @@ function build_all {
     . ./buildspec.sh
   else
     psp
-    vita
+    gp2x
     linux_x86
     linux_amd64
     windows
+    dreamcast
     wii
+    opendingux
+    wiz
     darwin
-	android
   fi
   distribute
 }
@@ -318,10 +405,14 @@ function print_help {
   echo "-------------------------------------------------------"
   echo "    0 = Distribute"
   echo "    1 = PSP"
-  echo "    2 = PS Vita"
+  echo "    2 = (unused)"
+  echo "    3 = Gp2x"
   echo "    4 = Linux (x86, amd64) Example: $0 4 amd64"
   echo "    5 = Windows"
+  echo "    6 = Dreamcast"
   echo "    7 = Wii"
+  echo "    8 = OpenDingux (A320 & GCW-Zero)"
+  echo "    9 = Wiz"
   echo "   10 = Darwin"
   echo "  all = build for all applicable targets"
   echo "-------------------------------------------------------"
@@ -342,7 +433,12 @@ case $1 in
 
   2)
     version
-    vita
+    echo "No platform here anymore (used to be PS2)"
+    ;;
+
+  3)
+    version
+    gp2x
     ;;
 
   4)
@@ -355,9 +451,24 @@ case $1 in
     windows
     ;;
 
+  6)
+    version
+    dreamcast
+    ;;
+
   7)
     version
     wii
+    ;;
+
+  8)
+    version
+    opendingux
+    ;;
+
+  9)
+    version
+    wiz
     ;;
 
   10)

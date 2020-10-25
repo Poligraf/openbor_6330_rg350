@@ -34,7 +34,7 @@ case $1 in
 #                           PSP Environment                                #
 #                                                                          #
 ############################################################################
-1) 
+1)
    if test -e "C:/pspsdk"; then
      export PSPDEV=C:/pspsdk
      export PATH=$PATH:$PSPDEV/bin
@@ -74,21 +74,10 @@ case $1 in
 
 ############################################################################
 #                                                                          #
-#                             Vita Environment                             #
+#                          Nothing Here Anymore                            #
 #                                                                          #
 ############################################################################
 2)
-  if test -d "$VITASDK"; then
-    export PATH="$PATH:$VITASDK/bin"
-     echo "-------------------------------------------------------"
-     echo "           VITA SDK ($HOST_PLATFORM) Environment Loaded!"
-     echo "-------------------------------------------------------"
-   else
-     echo "-------------------------------------------------------"
-     echo "            ERROR - VITA Environment Failed"
-     echo "                   SDK Installed?"
-     echo "-------------------------------------------------------"
-   fi
   ;;
 
 ############################################################################
@@ -189,11 +178,6 @@ case $1 in
      export SDKPATH=/usr/i586-mingw32msvc
      export PREFIX=i586-mingw32msvc-
      export PATH=$WINDEV:$PATH
-   elif test -e "/usr/i686-w64-mingw32"; then
-     export WINDEV=/usr/bin
-     export SDKPATH=/usr/i686-w64-mingw32
-     export PREFIX=i686-w64-mingw32-
-     export PATH=$WINDEV:$PATH
    elif test -e "/usr/local/i386-mingw32-3.4.5"; then
      export WINDEV=/usr/local/i386-mingw32-3.4.5/bin
      export SDKPATH=/usr/local/i386-mingw32-3.4.5
@@ -204,17 +188,12 @@ case $1 in
      export SDKPATH=/usr/local/i386-mingw32-4.3.0
      export PREFIX=i386-mingw32-
      export PATH=$WINDEV:$PATH
-   elif test -e "c:/mingw"; then
-     export WINDEV=c:/mingw/bin
-     export SDKPATH=c:/mingw
-     export EXTENSION=.exe
-     export PATH=$TOOLS:$WINDEV:$PATH
    elif [ `echo $HOST_PLATFORM | grep -E "windows|CYGWIN"` ]; then
      if [ ! -d "../tools/win-sdk/bin" ]; then
        echo "-------------------------------------------------------"
        echo "      Windows SDK - Not Found, Installing SDK!"
        echo "-------------------------------------------------------"
-       ../tools/7-Zip/7za.exe x -y ../tools/win-sdk/win-sdk.7z -o../tools/win-sdk/
+       ../tools/7-Zip/7za.exe x -y ../tools/win-sdk/MinGW.7z -o../tools/win-sdk/
        echo
        echo "-------------------------------------------------------"
        echo "      Windows SDK - Installation Has Completed!"
@@ -261,7 +240,7 @@ case $1 in
      fi
      HOST_PLATFORM="SVN";
      export PATH=$TOOLS
-     . ../tools/dc-sdk/kos/environ.sh     
+     . ../tools/dc-sdk/kos/environ.sh
    fi
    if test $KOS_BASE; then
      echo "-------------------------------------------------------"
@@ -327,6 +306,11 @@ case $1 in
      export OPENDINGUX_TOOLCHAIN=/opt/opendingux-toolchain
      export OPENDINGUX_TOOLCHAIN_PREFIX=$OPENDINGUX_TOOLCHAIN/usr
      export PATH=$PATH:$OPENDINGUX_TOOLCHAIN/usr/bin
+   elif test -e "/opt/gcw0-toolchain"; then
+     export OPENDINGUX_TOOLCHAIN=/opt/gcw0-toolchain
+     export OPENDINGUX_TOOLCHAIN_PREFIX=$OPENDINGUX_TOOLCHAIN/usr/mipsel-gcw0-linux-uclibc/sysroot/usr
+     export PATH=$PATH:$OPENDINGUX_TOOLCHAIN/usr/bin
+     export BUILD_GCW0=1
    fi
    if test $OPENDINGUX_TOOLCHAIN; then
      echo "-------------------------------------------------------"
@@ -339,7 +323,7 @@ case $1 in
      echo "-------------------------------------------------------"
    fi
    ;;
-   
+
 ############################################################################
 #                                                                          #
 #                             WIZ Environment                              #
@@ -421,7 +405,7 @@ case $1 in
    echo
    echo "-------------------------------------------------------"
    echo "   1 = PSP"
-   echo "   2 = (Not Used)"   
+   echo "   2 = (Not Used)"
    echo "   3 = Gp2x"
    echo "   4 = Linux"
    echo "   5 = Windows"

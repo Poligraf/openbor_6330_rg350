@@ -35,10 +35,10 @@ BUILD_VORBIS    = 1
 # BUILD_WEBM      = 1 #added
 BUILDING        = 1
 
-CC              = $(OPENDINGUX_TOOLCHAIN)/bin/mipsel-linux-gcc
-INCLUDES        = $(OPENDINGUX_TOOLCHAIN_PREFIX)/include \
-                  $(OPENDINGUX_TOOLCHAIN_PREFIX)/include/SDL2 
-LIBRARIES       = $(OPENDINGUX_TOOLCHAIN_PREFIX)/lib 
+CC              = /run/media/raboten/c03df044-bb85-4f9c-a53f-e537b8a024a0/RG350_buildroot/output/host/usr/bin/mipsel-linux-gcc
+INCLUDES        = /run/media/raboten/c03df044-bb85-4f9c-a53f-e537b8a024a0/RG350_buildroot/output/host/usr/mipsel-gcw0-linux-uclibc/sysroot/usr/include/ \
+                  /run/media/raboten/c03df044-bb85-4f9c-a53f-e537b8a024a0/RG350_buildroot/output/host/usr/mipsel-gcw0-linux-uclibc/sysroot/usr/include/SDL2 ./source/webmlib/
+LIBRARIES       = /run/media/raboten/c03df044-bb85-4f9c-a53f-e537b8a024a0/RG350_buildroot/output/host/usr/mipsel-gcw0-linux-uclibc/sysroot/usr/lib/
 
 # BUILD_DEBUG = 1
 ifeq ($(BUILD_OPENDINGUX), 0)
@@ -228,7 +228,7 @@ STRIP 	        = $(PNDDEV)/bin/arm-none-linux-gnueabi-strip $(TARGET) -o $(TARGE
 endif
 ifdef BUILD_OPENDINGUX
 # STRIP           = $(OPENDINGUX_TOOLCHAIN_PREFIX)/bin/mipsel-linux-strip $(TARGET) -o $(TARGET_FINAL)
-STRIP           = mipsel-linux-strip $(TARGET) -o $(TARGET_FINAL)
+STRIP           = /run/media/raboten/c03df044-bb85-4f9c-a53f-e537b8a024a0/RG350_buildroot/output/host/usr/bin/mipsel-linux-strip $(TARGET) -o $(TARGET_FINAL)
 endif
 ifdef BUILD_WII
 STRIP           = elf2dol $< $@
@@ -266,7 +266,7 @@ INCS           += 'libpng-config --prefix'/include/libpng
 endif
 
 ifdef BUILD_OPENDINGUX
-INCS           += '$(OPENDINGUX_TOOLCHAIN_PREFIX)/bin/libpng-config --prefix'/include/libpng
+INCS           += '/run/media/raboten/c03df044-bb85-4f9c-a53f-e537b8a024a0/rg350-toolchain/usr/mipsel-gcw0-linux-uclibc/sysroot/usr/bin/libpng-config --prefix'/include/libpng
 endif
 
 
@@ -528,7 +528,7 @@ endif
 
 ifdef BUILD_OPENDINGUX
 ifeq ($(BUILD_GCW0), 1)
-CFLAGS += -O3 -fomit-frame-pointer -ffast-math -funroll-loops -Wall -Wno-unknown-pragmas -Wno-format -DPLATFORM_DINGOO 
+CFLAGS += -O3 -fomit-frame-pointer -ffast-math -funroll-loops -Wall -Wno-unknown-pragmas -Wno-format -DPLATFORM_DINGOO
 else
 CFLAGS += -O3 -fomit-frame-pointer -ffast-math -funroll-loops -Wall -Wno-unknown-pragmas -Wno-format -DPLATFORM_DINGOO
 endif
@@ -611,7 +611,7 @@ ifdef BUILD_SDL
 ifeq ($(findstring DGE, $(SDKPATH)), DGE)
 LIBS           += -lSDL -lSDL_gfx -lts
 else
-LIBS           += -Wl,-rpath,$(LIBRARIES) -lSDL2 -lSDL2_gfx
+LIBS           += -Wl,-rpath,$(LIBRARIES) -lSDL2 'libSDL2_gfx.a'
 endif
 endif
 
@@ -814,4 +814,3 @@ version:
 	@echo
 	@echo "Copyright (c) 2004 - 2018 OpenBOR Team"
 	@echo "-------------------------------------------------------"
-
