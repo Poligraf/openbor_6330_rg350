@@ -1,6 +1,6 @@
 [Desktop Entry]
 Name=OpenBOR
-Comment=OpenBOR Engine r6391
+Comment=OpenBOR Engine r6330
 Exec=./ob.dge
 Terminal=true
 Type=Application
