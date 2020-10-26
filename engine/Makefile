@@ -665,7 +665,7 @@ LIBS           += -lvpx
 endif
 
 
-LIBS           += -lpng -lz -lm
+LIBS           += libpng16.a libSDL2_gfx.a -lz -lm
 
 #----------------------------------------------------------------------------------------------------
 # Rules to manage Files and Libraries for PSP
